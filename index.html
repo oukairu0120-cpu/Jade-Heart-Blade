@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玉骨柔情劍 | 武俠紳士遊戲 Jade Heart Blade</title>
+<meta name="description" content="玉骨柔情劍（Jade Heart Blade）—— 一款融合凌厲武學、柔情江湖與情感豐富的武俠策略RPG。沙盒世界自由探索，回合制見招拆招，江湖兒女的故事才正要開始。限18歲以上遊玩。">
+<meta name="keywords" content="玉骨柔情劍, Jade Heart Blade, JHB, 武俠遊戲, 18禁遊戲, 紳士遊戲, 武俠RPG, 策略RPG, SRPG, 回合制遊戲, 沙盒遊戲, 台灣遊戲, 獨立遊戲, 武俠戀愛, 紳士武俠, 江湖遊戲, 武學, 劍俠, 同人遊戲">
+<meta name="author" content="玉骨柔情劍 製作組">
+<meta name="robots" content="index, follow">
+<!-- Open Graph（分享到 Facebook / Discord 時顯示預覽） -->
+<meta property="og:title" content="玉骨柔情劍 | 武俠紳士策略RPG">
+<meta property="og:description" content="融合凌厲武學、柔情江湖與情感豐富的武俠策略RPG。沙盒世界自由探索，回合制見招拆招，限18歲以上。">
+<meta property="og:image" content="https://f49454-kobuta.github.io/Jade-Heart-Blade/2.png">
+<meta property="og:url" content="https://f49454-kobuta.github.io/Jade-Heart-Blade">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_TW">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="玉骨柔情劍 | 武俠紳士策略RPG">
+<meta name="twitter:description" content="融合凌厲武學、柔情江湖與情感豐富的武俠策略RPG。限18歲以上。">
+<meta name="twitter:image" content="https://f49454-kobuta.github.io/Jade-Heart-Blade/2.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: #1a0510;
+    color: #f0dde8;
+    min-height: 100vh;
+    font-size: 20px;
+  }
+
+  /* Shimmer keyframes */
+  @keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+  @keyframes sparkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0px); opacity: 0.6; }
+    50% { transform: translateY(-12px); opacity: 1; }
+    100% { transform: translateY(0px); opacity: 0.6; }
+  }
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.9; }
+  }
+
+  /* Age gate */
+  #age-gate {
+    position: fixed; inset: 0;
+    background: rgba(15,3,10,0.97);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 2rem;
+  }
+  .gate-box {
+    background: #1e0a16;
+    border: 1px solid #b03070;
+    border-radius: 16px; padding: 2.5rem; max-width: 560px; width: 100%;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(220,80,140,0.2);
+  }
+  .gate-warning { font-size: 2.5rem; margin-bottom: 1rem; }
+  .gate-box h2 { font-family: 'Noto Serif TC', serif; font-size: 1.5rem; margin-bottom: 0.5rem; color: #f9d0e8; }
+  .gate-box p { font-size: 1rem; color: #a07090; margin-bottom: 1.5rem; line-height: 1.6; }
+  .gate-buttons { display: flex; gap: 16px; }
+  .btn-confirm {
+    flex: 1; padding: 0.85rem 0.5rem; border: none; border-radius: 8px;
+    background: linear-gradient(135deg, #d4407a, #a02060);
+    color: #fff; font-size: 1rem; cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    white-space: nowrap;
+  }
+  .btn-confirm:hover { background: linear-gradient(135deg, #e0508a, #b03070); }
+  .btn-deny {
+    flex: 1; padding: 0.85rem 0.5rem; border: 1px solid #5a2040; border-radius: 8px;
+    background: transparent; color: #806070; font-size: 1rem; cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    white-space: nowrap;
+  }
+  .btn-deny:hover { border-color: #a05070; color: #c08090; }
+
+  #main-content { display: none; }
+
+  /* Hero */
+  .hero {
+    position: relative; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 4rem 2rem; text-align: center; overflow: hidden;
+  }
+
+  /* layered bg */
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(220,60,120,0.35) 0%, transparent 55%),
+      radial-gradient(ellipse at 75% 60%, rgba(180,30,90,0.25) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 100%, rgba(255,100,160,0.15) 0%, transparent 60%),
+      linear-gradient(160deg, #2a0318 0%, #1a0510 40%, #0f0208 100%);
+  }
+
+  /* Shimmering overlay */
+  .hero-shimmer {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(105deg,
+      transparent 30%,
+      rgba(255,180,220,0.04) 45%,
+      rgba(255,150,200,0.08) 50%,
+      rgba(255,180,220,0.04) 55%,
+      transparent 70%);
+    background-size: 200% 100%;
+    animation: shimmer 4s linear infinite;
+  }
+
+  /* Floating sparkle dots */
+  .sparkles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .sparkle {
+    position: absolute; width: 3px; height: 3px; border-radius: 50%;
+    background: #ffb0d8;
+  }
+  .sparkle:nth-child(1)  { top: 12%; left: 18%; animation: sparkle 2.1s ease-in-out infinite; }
+  .sparkle:nth-child(2)  { top: 25%; left: 72%; animation: sparkle 2.8s ease-in-out infinite 0.4s; }
+  .sparkle:nth-child(3)  { top: 40%; left: 35%; animation: sparkle 1.9s ease-in-out infinite 0.8s; }
+  .sparkle:nth-child(4)  { top: 60%; left: 85%; animation: sparkle 3.2s ease-in-out infinite 0.2s; }
+  .sparkle:nth-child(5)  { top: 75%; left: 15%; animation: sparkle 2.5s ease-in-out infinite 1s; }
+  .sparkle:nth-child(6)  { top: 18%; left: 55%; animation: sparkle 2.2s ease-in-out infinite 0.6s; }
+  .sparkle:nth-child(7)  { top: 85%; left: 50%; animation: sparkle 3s ease-in-out infinite 1.3s; }
+  .sparkle:nth-child(8)  { top: 50%; left: 60%; animation: sparkle 1.7s ease-in-out infinite 0.3s; }
+  .sparkle:nth-child(9)  { top: 32%; left: 8%;  animation: sparkle 2.9s ease-in-out infinite 0.9s; }
+  .sparkle:nth-child(10) { top: 68%; left: 92%; animation: sparkle 2.3s ease-in-out infinite 1.5s; }
+
+  /* Glow orbs */
+  .glow-orb {
+    position: absolute; border-radius: 50%; pointer-events: none; filter: blur(60px);
+  }
+  .glow-orb-1 {
+    width: 400px; height: 400px; top: -100px; left: -100px;
+    background: rgba(220,50,110,0.18);
+    animation: glowPulse 5s ease-in-out infinite;
+  }
+  .glow-orb-2 {
+    width: 300px; height: 300px; bottom: -60px; right: -60px;
+    background: rgba(255,100,170,0.14);
+    animation: glowPulse 6s ease-in-out infinite 1.5s;
+  }
+  .glow-orb-3 {
+    width: 200px; height: 200px; top: 40%; left: 60%;
+    background: rgba(255,160,210,0.1);
+    animation: glowPulse 4s ease-in-out infinite 0.8s;
+  }
+
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(15,3,10,0.1) 0%, rgba(15,3,10,0.85) 100%);
+  }
+
+  .hero-inner { position: relative; z-index: 2; max-width: 700px; }
+
+  .badge {
+    display: inline-block;
+    background: linear-gradient(90deg, rgba(180,30,90,0.5), rgba(220,80,140,0.5));
+    border: 1px solid rgba(220,100,160,0.6);
+    color: #ffb0d8; font-size: 0.75rem; padding: 4px 14px;
+    border-radius: 99px; margin-bottom: 1.5rem; letter-spacing: 0.1em;
+  }
+
+  .hero h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(2.8rem, 8vw, 5rem);
+    line-height: 1.15; margin-bottom: 0.5rem;
+    letter-spacing: 0.12em;
+    background: linear-gradient(135deg, #ffe0f0 0%, #ff90c8 40%, #ff4090 70%, #ffb0d8 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+    filter: drop-shadow(0 0 20px rgba(255,80,150,0.4));
+  }
+
+  .hero-subtitle {
+    font-size: 0.85rem; letter-spacing: 0.22em; margin-bottom: 2rem;
+    background: linear-gradient(90deg, #ff90c8, #ffb0d8, #ff90c8);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+    opacity: 0.8;
+  }
+
+  .hero-desc {
+    font-size: 1rem; color: #c8a0b8; line-height: 1.9;
+    margin-bottom: 2.5rem; text-align: left;
+    background: rgba(15,3,10,0.65);
+    border-left: 2px solid rgba(220,80,140,0.7);
+    padding: 1.25rem 1.5rem; border-radius: 0 8px 8px 0;
+  }
+
+  .price-tag { font-size: 1rem; color: #7a4060; text-decoration: line-through; margin-bottom: 6px; }
+  .price-main {
+    font-size: 3.2rem; font-weight: 700; margin-bottom: 0.4rem;
+    background: linear-gradient(90deg, #ffb0d8, #ff70b0, #ffb0d8);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+  }
+  .price-main span { font-size: 1rem; color: #a06080; -webkit-text-fill-color: #a06080; }
+
+  .btn-buy {
+    display: inline-block; padding: 1rem 3rem;
+    background: linear-gradient(135deg, #e0408a, #b02060, #e0408a);
+    background-size: 200% auto;
+    color: #fff; border: none; border-radius: 10px;
+    font-size: 1.1rem; font-family: 'Noto Serif TC', serif;
+    cursor: pointer; text-decoration: none; letter-spacing: 0.05em;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 30px rgba(220,60,130,0.6), 0 0 60px rgba(255,100,170,0.2);
+    animation: shimmer 3s linear infinite;
+  }
+  .btn-buy:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(220,60,130,0.8), 0 0 80px rgba(255,100,170,0.3);
+  }
+  .btn-buy:active { transform: translateY(0); }
+
+  .secure-note {
+    margin-top: 1rem; font-size: 1rem; color: #7a4060;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+
+  /* Video button */
+  .btn-video {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 1.2rem; padding: 0.6rem 1.6rem;
+    background: transparent;
+    border: 1px solid rgba(220,80,140,0.5);
+    border-radius: 99px; color: #ffb0d8;
+    font-size: 1rem; font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer; letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .btn-video:hover {
+    background: rgba(220,80,140,0.1);
+    border-color: rgba(220,80,140,0.9);
+    box-shadow: 0 0 20px rgba(220,80,140,0.2);
+  }
+  .play-icon {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(220,80,140,0.3); border: 1px solid rgba(220,80,140,0.6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+  }
+
+  /* Video modal */
+  #video-modal {
+    display: none; position: fixed; inset: 0; z-index: 3000;
+    background: rgba(5,0,8,0.95);
+    align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  #video-modal.active { display: flex; flex-direction: column; gap: 1rem; }
+  #video-modal video {
+    max-width: 90vw; max-height: 80vh;
+    border-radius: 12px;
+    border: 1px solid rgba(220,80,140,0.3);
+    box-shadow: 0 0 60px rgba(220,80,140,0.2);
+  }
+  #video-close {
+    background: none; border: 1px solid rgba(220,80,140,0.4);
+    color: #ffb0d8; font-size: 0.85rem; padding: 6px 20px;
+    border-radius: 99px; cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    transition: all 0.2s;
+  }
+  #video-close:hover { background: rgba(220,80,140,0.15); }
+
+  /* Divider */
+  .section-divider {
+    width: 100%; height: 1px; margin: 0;
+    background: linear-gradient(90deg, transparent, rgba(220,80,140,0.4), transparent);
+  }
+
+  /* Gallery carousel */
+  .gallery { padding: 4rem 2rem; max-width: 960px; margin: 0 auto; }
+  .gallery h2 {
+    font-family: 'Noto Serif TC', serif; font-size: 1.4rem;
+    text-align: center; margin-bottom: 2rem; letter-spacing: 0.08em;
+    background: linear-gradient(90deg, #ffb0d8, #ff70b0, #ffb0d8);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+  }
+  .carousel-wrap { position: relative; }
+  .carousel-track-outer {
+    overflow: hidden; border-radius: 12px;
+    background: rgba(10,2,8,0.6);
+  }
+  .carousel-track {
+    display: flex;
+    transition: transform 0.6s ease;
+    will-change: transform;
+  }
+  .carousel-track img {
+    flex-shrink: 0;
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+  .carousel-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(30,5,18,0.85); border: 1px solid rgba(220,80,140,0.4);
+    color: #ffb0d8; font-size: 1.2rem; width: 40px; height: 40px;
+    border-radius: 50%; cursor: pointer; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .carousel-btn:hover { background: rgba(220,80,140,0.25); border-color: rgba(220,80,140,0.8); }
+  .carousel-btn.prev { left: -16px; }
+  .carousel-btn.next { right: -16px; }
+  .carousel-dots {
+    display: flex; justify-content: center; gap: 6px; margin-top: 1rem;
+  }
+  .carousel-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(180,50,100,0.3); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .carousel-dot.active { background: #ff70b0; transform: scale(1.3); }
+
+  /* Censored image wrap */
+  .censored-wrap {
+    flex-shrink: 0;
+    width: 100%;
+    height: 400px;
+    position: relative;
+    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .censored-img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    filter: brightness(0);
+    transition: filter 0.4s ease;
+    background: #000;
+  }
+  .censored-overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px;
+    background: rgba(0,0,0,0.9);
+    transition: opacity 0.3s ease;
+  }
+  .censored-wrap:hover .censored-overlay { background: rgba(0,0,0,0.85); }
+  .eye-icon { filter: drop-shadow(0 0 8px rgba(255,100,160,0.6)); }
+  .censored-label {
+    font-size: 1rem; color: #ffb0d8; letter-spacing: 0.08em;
+    font-family: 'Noto Serif TC', serif;
+  }
+  .censored-hint {
+    font-size: 1rem; color: rgba(255,176,216,0.6); letter-spacing: 0.05em;
+  }
+
+  /* Lightbox */
+  #lightbox {
+    display: none; position: fixed; inset: 0; z-index: 2000;
+    background: rgba(10,2,8,0.95); align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  #lightbox.active { display: flex; }
+  #lightbox img { max-width: 90vw; max-height: 85vh; border-radius: 10px; object-fit: contain; }
+  #lightbox-close {
+    position: fixed; top: 1.5rem; right: 1.5rem; font-size: 2rem;
+    color: #a06080; cursor: pointer; background: none; border: none; line-height: 1;
+  }
+  #lightbox-close:hover { color: #ffb0d8; }
+
+  /* Features */
+  .features {
+    padding: 4rem 2rem; max-width: 960px; margin: 0 auto;
+  }
+  .features h2 {
+    font-family: 'Noto Serif TC', serif; font-size: 1.4rem;
+    text-align: center; margin-bottom: 2.5rem; letter-spacing: 0.08em;
+    background: linear-gradient(90deg, #ffb0d8, #ff70b0, #ffb0d8);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+  }
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .feature-card {
+    background: rgba(40,8,24,0.8);
+    border: 1px solid rgba(180,50,100,0.25); border-radius: 12px;
+    padding: 1.25rem; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .feature-card:hover {
+    border-color: rgba(220,80,140,0.5);
+    box-shadow: 0 0 20px rgba(220,80,140,0.1);
+  }
+  .feature-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem; color: #f0c0d8; }
+  .feature-card p { font-size: 1rem; color: #80506a; line-height: 1.8; }
+
+  /* Payment */
+  .payment-section {
+    padding: 3rem 2rem;
+    background: rgba(15,3,10,0.6);
+    text-align: center;
+    border-top: 1px solid rgba(180,50,100,0.15);
+  }
+  .payment-section h2 {
+    font-family: 'Noto Serif TC', serif; font-size: 1.4rem;
+    margin-bottom: 1.5rem; letter-spacing: 0.08em;
+    background: linear-gradient(90deg, #ffb0d8, #ff70b0, #ffb0d8);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+  }
+  .payment-methods { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .pay-badge {
+    background: rgba(40,8,24,0.8);
+    border: 1px solid rgba(180,50,100,0.25);
+    border-radius: 8px; padding: 8px 16px; font-size: 1rem; color: #f0c0d8;
+  }
+
+  footer {
+    padding: 2rem; text-align: center; font-size: 1rem;
+    color: #50253a;
+    border-top: 1px solid rgba(180,50,100,0.12);
+  }
+</style>
+</head>
+<body>
+
+<div id="age-gate">
+  <div class="gate-box" style="max-width: 560px;">
+    <div class="gate-warning">🔞</div>
+    <h2 style="font-size: 1.5rem; margin-bottom: 1.2rem;">成人內容警示公告</h2>
+
+    <div style="background: rgba(10,2,8,0.5); border: 1px solid rgba(180,50,100,0.25); border-radius: 10px; padding: 1rem 1.4rem; margin-bottom: 1.2rem; text-align: left;">
+      <div style="font-size: 0.85rem; color: #c090a8; letter-spacing: 0.08em; margin-bottom: 0.8rem;">本作品包含以下成人限制內容</div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 1rem; color: #80506a; display: flex; align-items: center; gap: 8px;">
+          <span style="color: #ff70b0;">✦</span> 露骨性描寫及紳士向圖像
+        </div>
+        <div style="font-size: 1rem; color: #80506a; display: flex; align-items: center; gap: 8px;">
+          <span style="color: #ff70b0;">✦</span> 性暗示對話與劇情場景
+        </div>
+        <div style="font-size: 1rem; color: #80506a; display: flex; align-items: center; gap: 8px;">
+          <span style="color: #ff70b0;">✦</span> 以性為主題之戰鬥招式與系統
+        </div>
+        <div style="font-size: 1rem; color: #80506a; display: flex; align-items: center; gap: 8px;">
+          <span style="color: #ff70b0;">✦</span> 暴力戰鬥與江湖衝突描寫
+        </div>
+        <div style="font-size: 1rem; color: #80506a; display: flex; align-items: center; gap: 8px;">
+          <span style="color: #ff70b0;">✦</span> 藥物迷幻與非自願情境劇情
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size: 1rem; color: #60354a; line-height: 1.7; margin-bottom: 1.2rem; text-align: left;">
+      本遊戲內容<strong style="color: #c090a8;">僅供年滿 18 歲之成年人</strong>購買與遊玩。進入遊戲即表示您確認已達法定成年年齡，並自願接觸上述成人內容。未成年人請立即離開。
+    </div>
+
+    <div class="gate-buttons">
+      <button class="btn-confirm" onclick="enterSite()">我已年滿18歲，同意進入</button>
+      <button class="btn-deny" onclick="denyEntry()">未滿18歲，離開</button>
+    </div>
+  </div>
+</div>
+
+<div id="main-content">
+
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-shimmer"></div>
+    <div class="sparkles">
+      <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+      <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+      <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+      <div class="sparkle"></div>
+    </div>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <div class="badge">🔞 限18歲以上 · Jade Heart Blade</div>
+      <h1>玉骨柔情劍</h1>
+      <div class="hero-subtitle">JADE HEART BLADE · JHB</div>
+      <div class="hero-desc">
+        江湖之中，從來不只有刀光劍影，也有難以割捨的情與義。劍光如霜，掌風破空，俠客行走四方，在恩怨與宿命之間一次次拔劍相對。武林之道講究身法、內勁與招式的精妙，高手過招往往只在瞬息之間分出勝負。<br><br>
+        然而在這片血雨腥風的江湖裡，人心依舊藏著柔情。有人為情入世，有人為義而戰，也有人在刀光劍影之中守著一份難以割捨的牽絆。冷冽的兵刃之下，是俠骨，也是情深；看似無情的對決之中，往往牽動著難以言說的心意。<br><br>
+        這是一個既有凌厲武學、快意恩仇，也有纏綿情感與人心糾葛的世界。在劍影與月色之間，江湖兒女的故事，才正要開始。
+      </div>
+      <div class="price-tag" style="text-decoration:none;">US$ 3</div>
+      <div class="price-main" id="twd-float">載入中…</div>
+      <div style="font-size:1rem; color:#a06080; margin-top:-1rem; margin-bottom:1.5rem; letter-spacing:0.05em;">限時特價</div>
+      <a class="btn-buy" href="https://f49454gmailcom.itch.io/jadebone-sentimental-sword" target="_blank" rel="noopener">立即購買 · itch.io</a>
+      <div class="secure-note">
+        🔒 <span>透過 itch.io 以 PayPal 安全付款 · 購買後即可下載</span>
+      </div>
+
+      <!-- 即時匯率換算卡片 -->
+      <div id="rate-card" style="
+        margin-top: 1.4rem;
+        background: rgba(40,8,24,0.75);
+        border: 1px solid rgba(180,50,100,0.3);
+        border-radius: 12px;
+        padding: 0.9rem 1.4rem;
+        font-size: 0.95rem;
+        color: #c090a8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      ">
+        <span style="color:#7a4060;">💱</span>
+        <span>US$3 約等於</span>
+        <span id="twd-amount" style="
+          font-size: 1.25rem;
+          font-weight: 700;
+          background: linear-gradient(90deg, #ffb0d8, #ff70b0, #ffb0d8);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: shimmer 3s linear infinite;
+        ">載入中…</span>
+        <span id="rate-meta" style="font-size:0.8rem; color:#50253a;"></span>
+      </div>
+      <script>
+        (function(){
+          function applyRate(rate) {
+            var twd = Math.round(3 * rate);
+            var twdStr = 'NT$ ' + twd.toLocaleString();
+            var el = document.getElementById('twd-amount');
+            var meta = document.getElementById('rate-meta');
+            var fl = document.getElementById('twd-float');
+            if (el) el.textContent = twdStr;
+            if (meta) meta.textContent = '（US$3・1 USD ≈ ' + rate.toFixed(2) + ' TWD）';
+            if (fl) fl.textContent = twdStr;
+          }
+          function showFallback() {
+            var el = document.getElementById('twd-amount');
+            var fl = document.getElementById('twd-float');
+            if (el) el.textContent = '約 NT$ 95';
+            if (fl) fl.textContent = '約 NT$ 95';
+            var meta = document.getElementById('rate-meta');
+            if (meta) meta.textContent = '（匯率暫時無法取得）';
+          }
+          // 主要 API：frankfurter（無 CORS 問題）
+          fetch('https://api.frankfurter.app/latest?from=USD&to=TWD')
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+              var rate = d.rates && d.rates.TWD;
+              if (rate) { applyRate(rate); }
+              else { throw new Error('no TWD'); }
+            })
+            .catch(function() {
+              // 備用 API
+              fetch('https://open.er-api.com/v6/latest/USD')
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                  var rate = d.rates && d.rates.TWD;
+                  if (rate) { applyRate(rate); }
+                  else { showFallback(); }
+                })
+                .catch(showFallback);
+            });
+        })();
+      </script>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="gallery">
+    <h2>遊戲畫面</h2>
+    <div class="carousel-wrap">
+      <button class="carousel-btn prev" onclick="carouselMove(-1)">&#8249;</button>
+      <div class="carousel-track-outer">
+        <div class="carousel-track" id="carouselTrack">
+          <img src="2.png"   alt="遊戲畫面 1" onclick="openLightbox(this.src)">
+          <img src="T01.jpg" alt="遊戲畫面 2" onclick="openLightbox(this.src)">
+          <img src="501.png" alt="遊戲畫面 3" onclick="openLightbox(this.src)">
+          <img src="502.png" alt="遊戲畫面 4" onclick="openLightbox(this.src)">
+          <img src="503.png" alt="遊戲畫面 5" onclick="openLightbox(this.src)">
+          <div class="censored-wrap" onclick="revealAndOpen('B15.png')">
+            <img src="B15.png" alt="紳士圖片 1" class="censored-img">
+            <div class="censored-overlay">
+              <div class="eye-icon">
+                <svg width="52" height="36" viewBox="0 0 52 36" fill="none">
+                  <ellipse cx="26" cy="18" rx="24" ry="14" stroke="#ffb0d8" stroke-width="2.5" fill="none"/>
+                  <circle cx="26" cy="18" r="7" fill="#ff70b0" opacity="0.9"/>
+                  <circle cx="28" cy="16" r="2.5" fill="white" opacity="0.5"/>
+                  <line x1="4" y1="4" x2="48" y2="32" stroke="#ff70b0" stroke-width="3" stroke-linecap="round"/>
+                  <line x1="4" y1="4" x2="48" y2="32" stroke="rgba(10,2,8,0.5)" stroke-width="5" stroke-linecap="round"/>
+                  <line x1="4" y1="4" x2="48" y2="32" stroke="#ff70b0" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="censored-label">🔞 紳士圖片</div>
+              <div class="censored-hint">點擊查看</div>
+            </div>
+          </div>
+          <div class="censored-wrap" onclick="revealAndOpen('F06.png')">
+            <img src="F06.png" alt="紳士圖片 2" class="censored-img">
+            <div class="censored-overlay">
+              <div class="eye-icon">
+                <svg width="52" height="36" viewBox="0 0 52 36" fill="none">
+                  <ellipse cx="26" cy="18" rx="24" ry="14" stroke="#ffb0d8" stroke-width="2.5" fill="none"/>
+                  <circle cx="26" cy="18" r="7" fill="#ff70b0" opacity="0.9"/>
+                  <circle cx="28" cy="16" r="2.5" fill="white" opacity="0.5"/>
+                  <line x1="4" y1="4" x2="48" y2="32" stroke="rgba(10,2,8,0.5)" stroke-width="5" stroke-linecap="round"/>
+                  <line x1="4" y1="4" x2="48" y2="32" stroke="#ff70b0" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="censored-label">🔞 紳士圖片</div>
+              <div class="censored-hint">點擊查看</div>
+            </div>
+          </div>
+          <div class="censored-wrap" onclick="revealAndOpen('G15.png')">
+            <img src="G15.png" alt="紳士圖片 3" class="censored-img">
+            <div class="censored-overlay">
+              <div class="eye-icon">
+                <svg width="52" height="36" viewBox="0 0 52 36" fill="none">
+                  <ellipse cx="26" cy="18" rx="24" ry="14" stroke="#ffb0d8" stroke-width="2.5" fill="none"/>
+                  <circle cx="26" cy="18" r="7" fill="#ff70b0" opacity="0.9"/>
+                  <circle cx="28" cy="16" r="2.5" fill="white" opacity="0.5"/>
+                  <line x1="4" y1="4" x2="48" y2="32" stroke="rgba(10,2,8,0.5)" stroke-width="5" stroke-linecap="round"/>
+                  <line x1="4" y1="4" x2="48" y2="32" stroke="#ff70b0" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="censored-label">🔞 紳士圖片</div>
+              <div class="censored-hint">點擊查看</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-btn next" onclick="carouselMove(1)">&#8250;</button>
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+    <div style="margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #50253a; letter-spacing: 0.05em;">
+      ✦ 本作品所有立繪、場景圖片均由 AI 輔助生成製作 ✦
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div class="features">
+    <h2>遊戲特色</h2>
+    <div class="feature-grid">
+
+      <!-- 沙盒回合制 -->
+      <div class="feature-card" style="grid-column: 1 / -1;">
+        <div class="feature-icon">🗺️</div>
+        <h3>自由江湖・沙盒回合制</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 0.75rem;">
+          <div>
+            <div style="font-size: 1rem; color: #c090a8; letter-spacing: 0.08em; margin-bottom: 0.75rem;">沙盒世界</div>
+            <p style="font-size: 1rem; color: #80506a; line-height: 1.9;">這片江湖沒有強迫你走的路。你可以自由穿梭各地，踏遍每一座城池與山野，也可以在某個角落駐足，與NPC閒話家常，探聽江湖秘聞。<br><br>
+            世界各地藏有大量支線任務與隱藏事件，有些輕鬆有趣，有些牽動著整個江湖的格局。收集珍稀武學秘笈、培養角色成長，每一次探索都可能帶來意想不到的收穫。<br><br>
+            <span style="color: #c090a8;">走哪條路，做哪些事，全由你決定。</span></p>
+          </div>
+          <div>
+            <div style="font-size: 1rem; color: #c090a8; letter-spacing: 0.08em; margin-bottom: 0.75rem;">回合制戰鬥</div>
+            <p style="font-size: 1rem; color: #80506a; line-height: 1.9;">戰鬥不靠反應速度，靠的是判斷與謀略。每一回合，行動順序都是勝負的關鍵，先手的優勢、後手的反制，稍有不慎便可能全盤皆輸。<br><br>
+            招式之間的互相剋制構成了戰鬥的核心博弈。對手出招的瞬間，你需要快速判斷，是硬接、是閃避，還是以攻代守？<br><br>
+            <span style="color: #c090a8;">不是最強的人贏，是最懂得見招拆招的人贏。</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 武學博弈 -->
+      <div class="feature-card" style="grid-column: 1 / -1;">
+        <div class="feature-icon">⚔️</div>
+        <h3>見招拆招的武學博弈</h3>
+        <p style="margin-bottom: 1.2rem; font-size: 1rem; color: #80506a; line-height: 1.9;">江湖武學，從來不只是拳腳相加。每一招式皆有其形、其意、其勢，出招之際，攻中帶守，守中藏攻，招招相扣，環環相制。本作武學系統以「見招拆招」為核心博弈邏輯，招式施展時，不僅能對敵方造成傷害、提升自身命中，同時附帶防禦強化或迴避提升的效果。高手過招，勝負往往不在一擊之力，而在於如何以己之招，破敵之勢。</p>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 0.5rem;">
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1rem;">
+            <div style="font-size: 1.05rem; font-weight: 500; color: #f0c0d8; margin-bottom: 0.4rem; letter-spacing: 0.05em;">猛虎硬爬山</div>
+            <div style="font-size: 1rem; color: #80506a; line-height: 1.7; margin-bottom: 0.6rem;">低伏沉身，雙拳前伸如虎爪抓撓，步伐沉穩而有爆發力。拳擊、肘擊、抓摔並用，氣勢威嚴如猛虎攀崖。</div>
+            <div style="font-size: 0.75rem; color: #e05080; background: rgba(220,50,80,0.12); border: 1px solid rgba(220,50,80,0.25); border-radius: 6px; padding: 3px 8px; display: inline-block;">🔻 高威力 · 破壞敵人防禦</div>
+          </div>
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1rem;">
+            <div style="font-size: 1.05rem; font-weight: 500; color: #f0c0d8; margin-bottom: 0.4rem; letter-spacing: 0.05em;">白蛇登樹</div>
+            <div style="font-size: 1rem; color: #80506a; line-height: 1.7; margin-bottom: 0.6rem;">槍勢如白蛇攀附而上，身法靈活纖巧、出招曲折縱橫，槍尖如蛇蜿蜒穿刺，攻擊精準且連綿不斷，變化莫測。</div>
+            <div style="font-size: 0.75rem; color: #d080ff; background: rgba(180,80,255,0.1); border: 1px solid rgba(180,80,255,0.25); border-radius: 6px; padding: 3px 8px; display: inline-block;">🔺 攻擊威力高 ＋ 自身閃避提升</div>
+          </div>
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1rem;">
+            <div style="font-size: 1.05rem; font-weight: 500; color: #f0c0d8; margin-bottom: 0.4rem; letter-spacing: 0.05em;">龍嘯崩山</div>
+            <div style="font-size: 1rem; color: #80506a; line-height: 1.7; margin-bottom: 0.6rem;">斧勢如巨龍嘯天，沉猛霸烈、力道驚人，出手每一次劈斬都帶著毀滅性的破壞力，震懾敵陣如山崩。</div>
+            <div style="font-size: 0.75rem; color: #ffaa40; background: rgba(255,150,40,0.1); border: 1px solid rgba(255,150,40,0.25); border-radius: 6px; padding: 3px 8px; display: inline-block;">⚡ 威力大幅上升 ／ 自身放棄防禦</div>
+          </div>
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1rem;">
+            <div style="font-size: 1.05rem; font-weight: 500; color: #f0c0d8; margin-bottom: 0.4rem; letter-spacing: 0.05em;">亂剁三百下</div>
+            <div style="font-size: 1rem; color: #80506a; line-height: 1.7; margin-bottom: 0.6rem;">刀勢狂亂如疾雨狂風，三百連斬毫不留情，攻擊範圍廣且令人生畏。</div>
+            <div style="font-size: 0.75rem; color: #60c8a0; background: rgba(60,180,120,0.1); border: 1px solid rgba(60,180,120,0.25); border-radius: 6px; padding: 3px 8px; display: inline-block;">🎯 命中率大幅提升</div>
+          </div>
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(220,80,140,0.4); border-radius: 10px; padding: 1rem;">
+            <div style="font-size: 1.05rem; font-weight: 500; color: #f0c0d8; margin-bottom: 0.4rem; letter-spacing: 0.05em;">羅裳纏骨</div>
+            <div style="font-size: 1rem; color: #80506a; line-height: 1.7; margin-bottom: 0.6rem;">魅力纏繞如羅裳，令敵意志如骨被束縛。以魅惑之氣籠罩敵身，使其深陷情欲之念而鬥志盡失，再無還手之力。</div>
+            <div style="font-size: 0.75rem; color: #ff90c8; background: rgba(220,80,140,0.1); border: 1px solid rgba(220,80,140,0.3); border-radius: 6px; padding: 3px 8px; display: inline-block;">💋 敵方喪失鬥志 · 性慾覺醒狀態</div>
+          </div>
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1rem;">
+            <div style="font-size: 1.05rem; font-weight: 500; color: #f0c0d8; margin-bottom: 0.4rem; letter-spacing: 0.05em;">冰魄回雪針</div>
+            <div style="font-size: 1rem; color: #80506a; line-height: 1.7; margin-bottom: 0.6rem;">出針如冰雪回旋，速度極快，寒意透骨，暗刺無聲卻致命。針出之後身形不停，可持續移動接敵。</div>
+            <div style="font-size: 0.75rem; color: #80d0ff; background: rgba(80,160,255,0.1); border: 1px solid rgba(80,160,255,0.25); border-radius: 6px; padding: 3px 8px; display: inline-block;">❄️ 暗器致命 · 出招後仍可移動</div>
+          </div>
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1rem;">
+            <div style="font-size: 1.05rem; font-weight: 500; color: #f0c0d8; margin-bottom: 0.4rem; letter-spacing: 0.05em;">流星墜月</div>
+            <div style="font-size: 1rem; color: #80506a; line-height: 1.7; margin-bottom: 0.6rem;">箭如流星墜落，速度極快，準確無比，射擊瞬息之間便貫穿敵陣。</div>
+            <div style="font-size: 0.75rem; color: #ffcc60; background: rgba(255,180,60,0.1); border: 1px solid rgba(255,180,60,0.25); border-radius: 6px; padding: 3px 8px; display: inline-block;">🏹 遠程攻擊 · 穿透敵陣</div>
+          </div>
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1rem;">
+            <div style="font-size: 1.05rem; font-weight: 500; color: #f0c0d8; margin-bottom: 0.4rem; letter-spacing: 0.05em;">碎石玄罡</div>
+            <div style="font-size: 1rem; color: #80506a; line-height: 1.7; margin-bottom: 0.6rem;">內勁如玄罡碎石，力道驚人，一擊震裂山河。</div>
+            <div style="font-size: 0.75rem; color: #d080ff; background: rgba(180,80,255,0.1); border: 1px solid rgba(180,80,255,0.25); border-radius: 6px; padding: 3px 8px; display: inline-block;">💥 拳掌傷害持續提升 3 回合</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 柔情江湖 -->
+      <div class="feature-card" style="grid-column: 1 / -1;">
+        <div class="feature-icon">🌙</div>
+        <h3>柔情江湖</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: center; margin-top: 0.75rem;">
+          <p style="line-height: 1.9; font-size: 1rem; color: #80506a;">江湖從來不是非黑即白。刀光劍影之下，每個人都有自己的立場，每段恩怨都有說不清的來龍去脈。<br><br>
+          韓家兄弟本是手足，卻因一場利益糾葛走向對立，刀刃相向。<span style="color: #c090a8;">你站在旁邊，你會如何選擇？袖手旁觀，還是介入？若你出手，你又站在哪一邊？</span><br><br>
+          名門正派的大師兄，一身清譽、備受尊崇；魔道魅影宮的魔修，妖冶神秘、人人避之。偏偏這兩人之間，生出了一段旁人難以理解的情愫。<span style="color: #c090a8;">你認為正與邪之間，真的容不下一段感情嗎？還是所謂的正邪，不過是立場不同的兩種選擇？</span><br><br>
+          影羅窟為利益不擇手段，破衣門善惡難辨，他們是真正的惡人，還是只是被江湖逼到那條路上的人？<span style="color: #c090a8;">影羅窟與破衣門之間的恩怨，你會站在哪一邊？</span><br><br>
+          鎮遠鏢局護鏢多年，攔路山賊劫掠為生，恩怨糾纏已久，究竟誰對誰錯，從來沒有人說得清。<span style="color: #c090a8;">在這個世界裡，沒有人會給你標準答案，判斷，由你自己來。</span></p>
+          <img src="screenshot.png" alt="柔情江湖" style="width:100%; border-radius: 10px; border: 1px solid rgba(180,50,100,0.3); object-fit: cover; cursor: pointer;" onclick="openLightbox(this.src)">
+        </div>
+      </div>
+
+      <!-- 宿命糾葛 -->
+      <div class="feature-card" style="grid-column: 1 / -1;">
+        <div class="feature-icon">📖</div>
+        <h3>宿命糾葛</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: center; margin-top: 0.75rem;">
+          <p style="line-height: 1.9; font-size: 1rem; color: #80506a;">有些相遇，從一開始就注定走向對立；有些因果，埋下的那天起便再難逃脫。江湖中人，各有各的來路，各有各的宿命。有人生來便背負著血仇，一刀一劍都是為了那個說不出口的名字；有人以為自己已經放下，卻在某一個轉角，被命運拽回了原點。恩是恩，仇是仇，可恩仇之間，往往只有一線之隔。<br><br>
+          翠灣城，曾是江湖中最繁華的渡口之城。然而連年的戰亂與動盪，使城中人口銳減，昔日喧囂的市井如今只餘幾分蕭條。為求城池延續，城主頒下一系列鼓勵生育的政策，力度之大令江湖人側目。<br><br>
+          從減免賦稅、官媒配對，到廣設溫柔鄉、聲色場所合法立足，政令一道比一道開放。最終，城主更頒下一條前所未聞的律令，城中任何人，皆可向他人提出交配申請，對方無論身份貴賤，若無正當理由，不得拒絕，官府為此背書，以繁衍為名，將人與人之間最私密的事，化作了一紙公文。<br><br>
+          <span style="color: #c090a8;">有人說這是亂世之中不得不走的路，也有人說翠灣城已將人倫踩在腳下。你路過翠灣，面對這樣的政令，你會如何自處？</span></p>
+          <img src="screenshot2.png" alt="翠灣城" style="width:100%; border-radius: 10px; border: 1px solid rgba(180,50,100,0.3); object-fit: cover; cursor: pointer;" onclick="openLightbox(this.src)">
+        </div>
+      </div>
+
+      <!-- 廣大世界 -->
+      <div class="feature-card" style="grid-column: 1 / -1;">
+        <div class="feature-icon">🌏</div>
+        <h3>廣袤江湖・無盡探索</h3>
+        <p style="font-size: 1rem; color: #80506a; line-height: 1.9; margin-bottom: 1.5rem;">這片江湖，遼闊得足以讓你走一輩子也走不完。七大地區各有其風貌，七座城池各藏其秘辛，十五處秘境深埋著不為人知的傳說與寶藏。兩百餘式武學散落天地之間，等待有緣人一一習得，淬煉成屬於自己的江湖之道。</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 2rem;">
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1.25rem;">
+            <div style="font-size: 0.75rem; color: #c090a8; letter-spacing: 0.08em; margin-bottom: 0.75rem;">七大地區</div>
+            <div style="font-size: 1rem; color: #a07090; line-height: 2;">
+              天闕 · 蒼梧 · 丹陽<br>雁門 · 崑羅 · 汀蘭<br>玄陵
+            </div>
+          </div>
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1.25rem;">
+            <div style="font-size: 0.75rem; color: #c090a8; letter-spacing: 0.08em; margin-bottom: 0.75rem;">七座城池</div>
+            <div style="font-size: 1rem; color: #a07090; line-height: 2;">
+              雲臺城 · 翠灣城 · 瀟月城<br>鐵羽城 · 盤龍城<br>冰鳳城 · 黑雲城
+            </div>
+          </div>
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1.25rem;">
+            <div style="font-size: 0.75rem; color: #c090a8; letter-spacing: 0.08em; margin-bottom: 0.75rem;">收錄內容</div>
+            <div style="font-size: 1rem; color: #a07090; line-height: 2;">
+              15 大秘境<br>200+ 武學招式<br>無數隱藏事件
+            </div>
+          </div>
+        </div>
+
+        <!-- 汀蘭地區介紹 -->
+        <div style="border-top: 1px solid rgba(180,50,100,0.2); padding-top: 1.5rem; margin-top: 0.5rem;">
+          <div style="font-size: 1rem; color: #c090a8; letter-spacing: 0.1em; margin-bottom: 1rem;">📍 地區介紹 · 汀蘭</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start;">
+            <div>
+              <img src="D6.jpg" alt="汀蘭地區" style="width:100%; border-radius: 10px; border: 1px solid rgba(180,50,100,0.3); cursor: pointer; margin-bottom: 0.75rem;" onclick="openLightbox(this.src)">
+            </div>
+            <div>
+              <p style="font-size: 1rem; color: #80506a; line-height: 1.9;">汀蘭地區地處偏遠，群山環抱，終年積雪不化。冰鳳城聳立於雪嶺之間，城牆厚重如冰岩，城內屋簷皆覆著青瓦白雪，靜謐得像一幅凍結的畫。城外散落著幾個依河而生的小鎮，居民多以織布、行商、替人抄寫書信為業，日子雖清苦，卻也自有一份踏實的安靜。<br><br>
+              霜華宮隱於城北高山之中，門派素來低調，卻武功深不可測。宮中弟子鮮少現身江湖，偶爾下山，也不過是採購物資，從不惹事。<br><br>
+              這裡，是女主角<span style="color: #f0c0d8;">封夜雪</span>與母親<span style="color: #f0c0d8;">封月寒</span>最初生活的地方。封月寒出身霜華宮，武功不凡，卻在鎮上只以織布、替人寫信糊口，刻意遠離江湖紛爭。封夜雪自幼跟著母親習得幾式掌法與劍招的架勢，然而家中從無真正的劍，練習時只能握著一根削得筆直的竹竿，在雪地裡一招一式地比劃。<br><br>
+              <span style="color: #c090a8;">那根竹竿，是她最初的江湖。</span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- YouTube 預告影片 -->
+        <div style="border-top: 1px solid rgba(180,50,100,0.2); padding-top: 1.5rem; margin-top: 1.5rem;">
+          <div style="font-size: 1rem; color: #c090a8; letter-spacing: 0.1em; margin-bottom: 1rem;">🎬 遊戲預告影片</div>
+          <div style="position: relative; width: 100%; padding-bottom: 56.25%; border-radius: 12px; overflow: hidden; border: 1px solid rgba(180,50,100,0.3);">
+            <iframe
+              src="https://www.youtube.com/embed/6I25dca0xpM"
+              style="position: absolute; inset: 0; width: 100%; height: 100%; border: none;"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 成人內容 -->
+      <div class="feature-card" style="grid-column: 1 / -1;">
+        <div class="feature-icon">🔞</div>
+        <h3>豐富紳士內容</h3>
+        <p style="font-size: 1rem; color: #80506a; line-height: 1.9; margin-bottom: 1.5rem;">江湖兒女，情欲本是人之常情。本作收錄大量紳士繪圖與動態演出，無論是纏綿悱惻的柔情時刻，還是熱烈奔放的激情場面，皆以精緻畫面細膩呈現。<br><br>
+        雇傭鏢師在護衛任務之外，眼神中藏著另一種心思，刀鞘之側，那份若即若離的覬覦從未消散。是保護，還是佔有，界線有時模糊得令人心跳加速。<br><br>
+        江湖中更有三大以情欲入道的神秘流派——<span style="color: #f0c0d8;">夢蝶軒</span>、<span style="color: #f0c0d8;">魅影宮</span>與<span style="color: #f0c0d8;">幻香宮</span>。夢蝶軒以幻術與媚功為武學根基，招式如夢似幻，令敵人在迷亂之中失去抵抗之心；魅影宮則以肉身為兵器，將情欲化為殺機，戰鬥之中攻守難辨，令對手防不勝防；幻香宮擅以奇香入體，香氣繚繞之間令人神志漸失，不知不覺間已落入圈套，待回神時早已身陷溫柔之局。<br><br>
+        幻香宮中，名聲最盛者莫過於<span style="color: #f0c0d8;">慕千嬋</span>。她慣以魅惑之術配合秘製藥香，令目標在不知不覺間神志渙散、情欲上湧，待藥性發作之際已無從抵抗。江湖上流傳著她的名號，有人說她是妖女，有人說她不過是以另一種方式求生存。慕千嬋從不解釋，只是淡淡一笑，再點燃下一爐香。<span style="color: #c090a8;">你遇見她時，你還能保持清醒嗎？</span><br><br>
+        <span style="color: #c090a8;">每一張圖、每一幀動態，都是這段江湖故事裡不可或缺的一部分。</span></p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1.25rem; text-align: center;">
+            <div style="font-size: 2rem; font-weight: 700; color: #f0c0d8; margin-bottom: 0.3rem; background: linear-gradient(135deg, #ffe0f0, #ff90c8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">180+</div>
+            <div style="font-size: 1rem; color: #c090a8; margin-bottom: 0.5rem;">張靜態紳士圖</div>
+            <div style="font-size: 0.75rem; color: #60354a; line-height: 1.6;">精緻 AI 繪製立繪，各式場景情境一覽無遺</div>
+          </div>
+          <div style="background: rgba(15,3,10,0.7); border: 1px solid rgba(180,50,100,0.3); border-radius: 10px; padding: 1.25rem; text-align: center;">
+            <div style="font-size: 2rem; font-weight: 700; color: #f0c0d8; margin-bottom: 0.3rem; background: linear-gradient(135deg, #ffe0f0, #ff90c8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">34+</div>
+            <div style="font-size: 1rem; color: #c090a8; margin-bottom: 0.5rem;">張戰鬥動態紳士圖</div>
+            <div style="font-size: 0.75rem; color: #60354a; line-height: 1.6;">戰鬥場景動態演出，激烈與柔情交織呈現</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <div style="padding: 4rem 2rem; max-width: 960px; margin: 0 auto;">
+    <h2 style="font-family: 'Noto Serif TC', serif; font-size: 1.4rem; text-align: center; margin-bottom: 2rem; letter-spacing: 0.08em; background: linear-gradient(90deg, #ffb0d8, #ff70b0, #ffb0d8); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmer 4s linear infinite;">系統需求</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+
+      <div style="background: rgba(40,8,24,0.8); border: 1px solid rgba(180,50,100,0.25); border-radius: 12px; padding: 1.5rem;">
+        <div style="font-size: 1rem; color: #c090a8; letter-spacing: 0.1em; margin-bottom: 1rem;">最低需求</div>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="font-size: 1rem; color: #60354a; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1); width: 40%;">作業系統</td>
+            <td style="font-size: 1rem; color: #a07090; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">Windows 7 / 8 / 10 / 11</td>
+          </tr>
+          <tr>
+            <td style="font-size: 1rem; color: #60354a; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">處理器</td>
+            <td style="font-size: 1rem; color: #a07090; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">Intel Core i3 同等級以上</td>
+          </tr>
+          <tr>
+            <td style="font-size: 1rem; color: #60354a; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">記憶體</td>
+            <td style="font-size: 1rem; color: #a07090; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">2 GB RAM</td>
+          </tr>
+          <tr>
+            <td style="font-size: 1rem; color: #60354a; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">顯示卡</td>
+            <td style="font-size: 1rem; color: #a07090; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">1024 x 768 以上解析度</td>
+          </tr>
+          <tr>
+            <td style="font-size: 1rem; color: #60354a; padding: 6px 0;">儲存空間</td>
+            <td style="font-size: 1rem; color: #a07090; padding: 6px 0;">2 GB 以上可用空間</td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="background: rgba(40,8,24,0.8); border: 1px solid rgba(220,80,140,0.4); border-radius: 12px; padding: 1.5rem; box-shadow: 0 0 20px rgba(220,80,140,0.08);">
+        <div style="font-size: 1rem; color: #c090a8; letter-spacing: 0.1em; margin-bottom: 1rem;">建議需求</div>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="font-size: 1rem; color: #60354a; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1); width: 40%;">作業系統</td>
+            <td style="font-size: 1rem; color: #f0c0d8; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">Windows 10 / 11（64位元）</td>
+          </tr>
+          <tr>
+            <td style="font-size: 1rem; color: #60354a; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">處理器</td>
+            <td style="font-size: 1rem; color: #f0c0d8; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">Intel Core i5 同等級以上</td>
+          </tr>
+          <tr>
+            <td style="font-size: 1rem; color: #60354a; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">記憶體</td>
+            <td style="font-size: 1rem; color: #f0c0d8; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">4 GB RAM</td>
+          </tr>
+          <tr>
+            <td style="font-size: 1rem; color: #60354a; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">顯示卡</td>
+            <td style="font-size: 1rem; color: #f0c0d8; padding: 6px 0; border-bottom: 1px solid rgba(180,50,100,0.1);">1920 x 1080 解析度</td>
+          </tr>
+          <tr>
+            <td style="font-size: 1rem; color: #60354a; padding: 6px 0;">儲存空間</td>
+            <td style="font-size: 1rem; color: #f0c0d8; padding: 6px 0;">2 GB 以上可用空間</td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+    <div style="margin-top: 1rem; font-size: 0.9rem; color: #50253a; text-align: center; line-height: 1.7;">
+      僅支援 Windows 作業系統 · 不支援 Mac / Linux
+    </div>
+  </div>
+
+  <div class="payment-section">
+    <h2>支援付款方式</h2>
+    <div style="font-size: 0.95rem; color: #80506a; margin-bottom: 1rem;">透過 itch.io 結帳，款項經由 PayPal 安全付款</div>
+    <div class="payment-methods">
+      <div class="pay-badge">🅿️ PayPal 帳戶</div>
+      <div class="pay-badge">💳 信用卡 / 簽帳卡（經 PayPal 結帳）</div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 玉骨柔情劍 · Jade Heart Blade<br>
+    <span style="margin-top: 0.8rem; display: inline-block; font-size: 1rem; color: #c090a8; letter-spacing: 0.05em;">
+      聯絡信箱 &nbsp;✉&nbsp; f49454&#64;gmail&#46;com
+    </span>
+  </footer>
+
+</div>
+
+<div id="lightbox" onclick="closeLightbox()">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- Intro Animation -->
+<div id="intro-screen" style="display:none; position:fixed; inset:0; background:#0a0005; z-index:2000; align-items:center; justify-content:center; flex-direction:column;">
+  <video id="intro-video" playsinline style="max-width:100vw; max-height:100vh; object-fit:contain;">
+    <source src="F001.mp4" type="video/mp4">
+  </video>
+  <button onclick="skipIntro()" style="position:fixed; bottom:2rem; right:2rem; background:rgba(220,80,140,0.2); border:1px solid rgba(220,80,140,0.4); color:#ffb0d8; font-size:0.8rem; padding:6px 18px; border-radius:99px; cursor:pointer; font-family:'Noto Sans TC',sans-serif; letter-spacing:0.05em;">略過 ▶</button>
+</div>
+
+
+<script>
+  function enterSite() {
+    document.getElementById('age-gate').style.display = 'none';
+    const intro = document.getElementById('intro-screen');
+    const video = document.getElementById('intro-video');
+    intro.style.display = 'flex';
+    video.play();
+    video.addEventListener('ended', function() { finishIntro(); });
+  }
+  function skipIntro() {
+    document.getElementById('intro-video').pause();
+    finishIntro();
+  }
+  function finishIntro() {
+    const intro = document.getElementById('intro-screen');
+    intro.style.transition = 'opacity 0.8s ease';
+    intro.style.opacity = '0';
+    setTimeout(function() {
+      intro.style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+      initCarousel();
+    }, 800);
+  }
+  function denyEntry() {
+    document.getElementById('age-gate').innerHTML = '<div class="gate-box"><div class="gate-warning">🚫</div><h2>無法進入</h2><p>本網站僅供年滿18歲之成年人瀏覽。</p></div>';
+  }
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('active');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+  }
+  function revealAndOpen(src) {
+    openLightbox(src);
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // Carousel
+  let currentSlide = 0;
+  let slideTimer = null;
+  let totalSlides = 0;
+
+  function initCarousel() {
+    const track = document.getElementById('carouselTrack');
+    const dots = document.getElementById('carouselDots');
+    const imgs = track.querySelectorAll('img');
+    totalSlides = imgs.length;
+    dots.innerHTML = '';
+    imgs.forEach(function(_, i) {
+      const d = document.createElement('div');
+      d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+      d.onclick = function() { goToSlide(i); };
+      dots.appendChild(d);
+    });
+    startAuto();
+  }
+
+  function goToSlide(i) {
+    currentSlide = (i + totalSlides) % totalSlides;
+    const track = document.getElementById('carouselTrack');
+    track.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+    document.querySelectorAll('.carousel-dot').forEach(function(d, idx) {
+      d.classList.toggle('active', idx === currentSlide);
+    });
+  }
+
+  function startAuto() {
+    clearInterval(slideTimer);
+    slideTimer = setInterval(function() {
+      goToSlide(currentSlide + 1);
+    }, 3500);
+  }
+
+  function carouselMove(dir) {
+    goToSlide(currentSlide + dir);
+    startAuto();
+  }
+</script>
+
+</body>
+</html>
